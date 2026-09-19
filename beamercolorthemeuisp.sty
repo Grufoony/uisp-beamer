@@ -1,0 +1,43 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamercolorthemeuisp}[2026/09/08 UISP color theme]
+\mode<presentation>
+
+\DeclareOptionBeamer{style}{\def\beamer@uisp@style{#1}}
+\ExecuteOptionsBeamer{style=green}
+\ProcessOptionsBeamer
+
+% UISP social green: Pantone 356 per the UISP visual identity manual.
+% The RGB/HTML value below is a practical screen approximation.
+\definecolor{uispgreen}{HTML}{007A3D}
+\definecolor{uispgreenlight}{HTML}{2E9B63}
+\definecolor{uispdarkgreen}{HTML}{00572C}
+\definecolor{uispaqua}{HTML}{27B7C7}
+\definecolor{uispalightaqua}{HTML}{E5F7F9}
+\definecolor{uispgrey}{HTML}{66706B}
+\definecolor{uisplightgrey}{HTML}{F3F5F4}
+\definecolor{uispdark}{HTML}{1F2925}
+\definecolor{uispwhite}{HTML}{FFFFFF}
+\definecolor{uispred}{HTML}{D64545}
+
+\setbeamercolor{normal text}{fg=uispdark,bg=white}
+\setbeamercolor{structure}{fg=uispgreen}
+\setbeamercolor{alerted text}{fg=uispred}
+\setbeamercolor{example text}{fg=uispgreenlight}
+\setbeamercolor{frametitle}{fg=uispdark,bg=white}
+\setbeamercolor{framesubtitle}{fg=uispgrey}
+\setbeamercolor{title}{fg=uispgreen}
+\setbeamercolor{subtitle}{fg=uispgrey}
+\setbeamercolor{author}{fg=uispgrey}
+\setbeamercolor{institute}{fg=uispgrey}
+\setbeamercolor{date}{fg=uispgrey}
+\setbeamercolor{footline}{fg=uispgrey,bg=white}
+\setbeamercolor{section title}{fg=white}
+\setbeamercolor{section page title}{fg=white}
+\setbeamercolor{block title}{fg=white,bg=uispgreen}
+\setbeamercolor{block body}{fg=uispdark,bg=uispalightaqua}
+\setbeamercolor{block title alerted}{fg=white,bg=uispred}
+\setbeamercolor{block body alerted}{fg=uispdark,bg=uispred!8!white}
+\setbeamercolor{block title example}{fg=white,bg=uispaqua!70!uispgreen}
+\setbeamercolor{block body example}{fg=uispdark,bg=uispaqua!8!white}
+
+\mode<all>

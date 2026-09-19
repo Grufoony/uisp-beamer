@@ -1,0 +1,27 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerouterthemeuisp}[2026/09/08 UISP outer theme]
+\mode<presentation>
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=22pt,text margin right=22pt}
+
+\defbeamertemplate*{footline}{uisp}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.9ex,dp=1.2ex,leftskip=22pt,rightskip=22pt]{footline}%
+      \raisebox{-.2\height}{\IfFileExists{logo.png}{\includegraphics[height=1.5ex]{logo.png}}{\textcolor{uispgreen}{\bfseries UISP}}}%
+      \hspace{5pt}%
+      \insertauthorfooter
+      \hfill
+      \inserteventfooter
+      \hfill
+      \textcolor{uispgreen}{\insertframenumber}
+    \end{beamercolorbox}%
+  }%
+}
+\setbeamertemplate{footline}[uisp]
+
+% Suppress the default headline; this keeps the slides close to the clean website style.
+\setbeamertemplate{headline}{}
+
+\mode<all>

@@ -1,0 +1,125 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemeuisp}[2026/09/08 UISP Nuoto Beamer theme]
+
+\mode<presentation>
+
+\RequirePackage{tikz}
+\RequirePackage{xkeyval}
+\RequirePackage{calc}
+\RequirePackage{graphicx}
+\RequirePackage{amsmath}
+\usetikzlibrary{calc,positioning}
+
+% -----------------------------------------------------------------------------
+% Options
+% -----------------------------------------------------------------------------
+\DeclareOptionBeamer{style}{\PassOptionsToPackage{style=#1}{beamercolorthemeuisp}}
+\ExecuteOptionsBeamer{style=green}
+\ProcessOptionsBeamer
+
+% -----------------------------------------------------------------------------
+% UISP metadata helpers
+% -----------------------------------------------------------------------------
+\newcommand\insertaffiliation{}
+\newcommand\affiliation[1]{\renewcommand\insertaffiliation{#1}}
+\newcommand\insertshorttitlecustom{}
+\newcommand\shorttitle[1]{\renewcommand\insertshorttitlecustom{#1}}
+\newcommand\insertevent{}
+\newcommand\event[1]{\renewcommand\insertevent{#1}}
+\newcommand\insertlocation{}
+\newcommand\location[1]{\renewcommand\insertlocation{#1}}
+\newcommand\insertauthorfooter{}
+\newcommand\authorfooter[1]{\renewcommand\insertauthorfooter{#1}}
+\newcommand\inserteventfooter{}
+\newcommand\eventfooter[1]{\renewcommand\inserteventfooter{#1}}
+\newcommand\insertcoverpicture{uisp-cover.jpg}
+\newcommand\coverpicture[1]{\renewcommand\insertcoverpicture{#1}}
+
+\usefonttheme{uisp}
+\usecolortheme{uisp}
+\useinnertheme{uisp}
+\useoutertheme{uisp}
+
+% -----------------------------------------------------------------------------
+% Background image utility (compatible in spirit with Princeton's template)
+% -----------------------------------------------------------------------------
+\newlength{\uisp@ratio@image}
+\newlength{\uisp@ratio@slide}
+\newlength{\uisp@xshift}
+\newlength{\uisp@yshift}
+\newsavebox{\uisp@bg@box}
+\define@key{backgroundimage}{xshift}{\setlength\uisp@xshift{#1}}
+\define@key{backgroundimage}{yshift}{\setlength\uisp@yshift{#1}}
+\define@key{backgroundimage}{opacity}{\def\uisp@opacity{#1}}
+\setkeys{backgroundimage}{xshift=0pt,yshift=0pt,opacity=1}
+
+\newcommand{\uispbackgroundimage}[2][]{%
+  \setkeys{backgroundimage}{#1}%
+  \IfFileExists{#2}{%
+    \sbox{\uisp@bg@box}{\includegraphics{#2}}%
+    \setlength{\uisp@ratio@image}{1pt * \ratio{\wd\uisp@bg@box}{\ht\uisp@bg@box}}%
+    \setlength{\uisp@ratio@slide}{1pt * \ratio{\paperwidth}{\paperheight}}%
+    \usebackgroundtemplate{%
+      \begin{tikzpicture}[remember picture,overlay]
+        \node at ($(current page.center)-(\uisp@xshift,\uisp@yshift)$) {%
+          \ifdim\uisp@ratio@image>\uisp@ratio@slide
+            \includegraphics[height=\paperheight]{#2}%
+          \else
+            \includegraphics[width=\paperwidth]{#2}%
+          \fi
+        };
+        \fill[white,opacity=1-\uisp@opacity] (current page.north west) rectangle (current page.south east);
+      \end{tikzpicture}%
+    }%
+  }{}
+}
+
+% -----------------------------------------------------------------------------
+% iframe environment
+% -----------------------------------------------------------------------------
+\newlength{\uisp@iframex}
+\newlength{\uisp@iframey}
+\newcommand{\uisp@iframeimage}{example-image-a}
+\define@key{iframe}{image}{\def\uisp@iframeimage{#1}}
+\define@key{iframe}{xshift}{\setlength\uisp@iframex{#1}}
+\define@key{iframe}{yshift}{\setlength\uisp@iframey{#1}}
+\define@key{iframe}{opacity}{\def\uisp@iframeopacity{#1}}
+\setkeys{iframe}{image=example-image-a,xshift=0pt,yshift=0pt,opacity=.55}
+
+\NewDocumentEnvironment{iframe}{d<> O{} m O{}}{% 
+  \setkeys{iframe}{#4}%
+  \uispbackgroundimage[xshift=\uisp@iframex,yshift=\uisp@iframey,opacity=\uisp@iframeopacity]{\uisp@iframeimage}%
+  \begin{frame}<#1>[#2]{#3}%
+}{%
+  \end{frame}%
+}
+
+% -----------------------------------------------------------------------------
+% Section divider
+% -----------------------------------------------------------------------------
+\NewDocumentCommand{\sectionframe}{s O{} m}{%
+  \IfBooleanTF{#1}{\begin{frame}[plain,noframenumbering]}{\begin{frame}[plain]}%
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[uispgreen] (current page.south west) rectangle (current page.north east);
+      % Water/wave motif
+      \foreach \y/\a in {0.0/0.20,0.18/0.12,0.36/0.08}{%
+        \draw[uispaqua!65!white,line width=1.2pt,opacity=\a]
+          ($(current page.south west)+(0,\y\paperheight)$)
+          .. controls +(0.22\paperwidth,0.055\paperheight) and +(0.52\paperwidth,-0.055\paperheight) ..
+          ($(current page.south east)+(0,\y\paperheight)$);
+      }
+      \node[anchor=west,align=left,text=white,font=\usebeamerfont{section title}]
+        at ($(current page.west)+(9mm,7mm)$) {\textsf{\textbf{#2}}};
+      \node[anchor=west,align=left,text=white,font=\usebeamerfont{section page title}]
+        at ($(current page.west)+(9mm,-12mm)$) {#3};
+      \node[anchor=south east] at ($(current page.south east)+(-6mm,6mm)$)
+        {\IfFileExists{logo-white.png}{\includegraphics[width=2.55cm]{logo-white.png}}{\uisplogowhite}};
+    \end{tikzpicture}
+  \end{frame}%
+}
+
+% Helpful math commands
+\newcommand{\alertmath}[1]{\textcolor{uispgreen}{\ensuremath{\boldsymbol{#1}}}}
+\newcommand{\citetext}[1]{\hfill{\scriptsize\textcolor{uispgrey}{#1}}}
+
+\mode<all>

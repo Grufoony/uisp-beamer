@@ -1,0 +1,93 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerinnerthemeuisp}[2026/09/08 UISP inner theme]
+\mode<presentation>
+
+\makeatletter
+\@ifundefined{beamer@uisp@logo}{\def\beamer@uisp@logo{logo.png}}{}
+\newcommand{\uisplogodark}{%
+  \IfFileExists{\beamer@uisp@logo}{\includegraphics[width=2.55cm]{\beamer@uisp@logo}}{%
+    \begin{tikzpicture}[baseline=-.6ex]\node[rounded corners=1pt,draw=uispgreen,fill=uispgreen,inner xsep=4pt,inner ysep=2pt,text=white,font=\bfseries\scriptsize] {UISP};\end{tikzpicture}%
+  }%
+}
+\newcommand{\uisplogowhite}{%
+  \IfFileExists{\beamer@uisp@logo}{\includegraphics[width=2.55cm]{\beamer@uisp@logo}}{%
+    \begin{tikzpicture}[baseline=-.6ex]\node[rounded corners=1pt,draw=white,fill=white,inner xsep=4pt,inner ysep=2pt,text=uispgreen,font=\bfseries\scriptsize] {UISP};\end{tikzpicture}%
+  }%
+}
+\makeatother
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=22pt,text margin right=22pt}
+
+% Bullet styling inspired by the visual language of the site: green dots.
+\setbeamertemplate{itemize item}{\raisebox{.2ex}{\tikz\fill[uispgreen] (0,0) circle (.48ex);}}
+\setbeamertemplate{itemize subitem}{\raisebox{.2ex}{\tikz\fill[uispaqua] (0,0) circle (.38ex);}}
+\setbeamertemplate{enumerate item}{\insertenumlabel.}
+
+% Blocks: clean, slightly rounded, no heavy shadow.
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+% Title page: clean white canvas, strong green panel, pool/wave motif.
+\defbeamertemplate*{title page}{uisp}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \IfFileExists{\insertcoverpicture}{\node[anchor=center,inner sep=0pt] at (current page.center) {\includegraphics[width=\paperwidth,height=\paperheight]{\insertcoverpicture}};}{}%
+    \fill[uispalightaqua,opacity=.96] (current page.south east) rectangle (current page.north east);
+    \fill[uispgreen] (current page.south west) rectangle ($(current page.north west)+(0.39\paperwidth,0)$);
+    % Large translucent waves on the green panel.
+    \foreach \yy in {0.10,0.18,0.26}{%
+      \draw[white,opacity=.12,line width=2pt]
+        ($(current page.south west)+(-0.03\paperwidth,\yy\paperheight)$)
+        .. controls +(0.13\paperwidth,0.07\paperheight) and +(0.30\paperwidth,-0.07\paperheight) ..
+        ($(current page.south west)+(0.42\paperwidth,\yy\paperheight)$);
+    }
+    % Logo
+    \node[anchor=north west,fill=white,rounded corners=2pt,inner xsep=4pt,inner ysep=3pt] at ($(current page.north west)+(8mm,-6mm)$) {\uisplogodark};
+    % Small kicker
+    \node[anchor=west,inner sep=0pt,text=white,font=\bfseries\scriptsize]
+      at ($(current page.north west)+(10mm,-34mm)$) {\insertevent};
+    % Title
+    \node[anchor=north west,align=left,inner sep=0pt,text=white]
+      at ($(current page.north west)+(10mm,-49mm)$) {\begin{minipage}{0.30\paperwidth}{\fontsize{22pt}{25pt}\selectfont\bfseries\inserttitle}\end{minipage}};
+    \node[anchor=north west,align=left,inner sep=0pt,text=white]
+      at ($(current page.north west)+(10mm,-91mm)$) {\begin{minipage}{0.30\paperwidth}\usebeamerfont{subtitle}\insertsubtitle\end{minipage}};
+
+    % Right-side metadata
+    \node[anchor=north west,align=left,inner sep=0pt,text=uispdark]
+      at ($(current page.west)+(0.45\paperwidth,-34mm)$) {%
+        \usebeamerfont{author}\insertauthor\\[-1pt]
+        \usebeamerfont{institute}\insertaffiliation\\[5pt]
+        \usebeamerfont{date}\insertdate
+      };
+    % Pool illustration card, centered in the white panel above the metadata
+    \coordinate (imgsw) at ($(current page.east)+(-79mm,-22mm)$);
+    \coordinate (imgne) at ($(current page.east)+(-19mm,38mm)$);
+    \fill[uisplightgrey,rounded corners=3pt] ($(imgsw)+(1mm,-1mm)$) rectangle ($(imgne)+(1mm,-1mm)$);
+    \begin{scope}
+      \clip[rounded corners=3pt] (imgsw) rectangle (imgne);
+      \node[anchor=south west,inner sep=0pt] at (imgsw) {\includegraphics[width=60mm,height=60mm]{cartoon.png}};
+    \end{scope}
+    \draw[uispgreen,line width=.8pt,rounded corners=3pt] (imgsw) rectangle (imgne);
+  \end{tikzpicture}%
+}
+
+\renewcommand{\maketitle}{%
+  {\setbeamertemplate{footline}{}\frame[plain,noframenumbering]{\titlepage}}%
+}
+
+% Frame title with a compact green accent bar.
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1.0cm,dp=0.15cm,leftskip=22pt,rightskip=22pt]{frametitle}
+    \usebeamerfont{frametitle}\insertframetitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.075cm,dp=0pt]{frametitle}%
+    \hspace*{22pt}\rule{0.16\paperwidth}{0.075cm}%
+  \end{beamercolorbox}%
+  \ifx\insertframesubtitle\@empty\else
+    \begin{beamercolorbox}[wd=\paperwidth,ht=.42cm,dp=.05cm,leftskip=22pt]{framesubtitle}
+      \usebeamerfont{framesubtitle}\insertframesubtitle
+    \end{beamercolorbox}%
+  \fi
+}
+
+\mode<all>
